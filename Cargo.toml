@@ -1,0 +1,14 @@
+[package]
+name = "larprdp"
+version = "0.1.0"
+edition = "2021"
+description = "RDP automation and scripting tool. Run CLI commands over RDP."
+license = "AGPL-3.0"
+
+[[bin]]
+name = "larprdp"
+path = "src/main.rs"
+
+[build-dependencies]
+cc = "1"
+pkg-config = "0.3"
